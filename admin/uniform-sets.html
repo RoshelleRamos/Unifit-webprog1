@@ -1,5 +1,407 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Uniform Set Orders | UniFit Admin</title><link rel="stylesheet" href="../css/style.css"></head>
-<body class="admin-body"><header class="admin-header"><a href="../index.html" class="admin-logo"><img src="../assets/images/Group 6.png" alt="UniFit Logo"><div><strong>UniFit</strong><span>Admin Panel</span></div></a><div class="admin-header-actions"><span class="admin-name">Administrator</span><button type="button" class="btn admin-logout-button">Logout</button></div></header>
-<div class="admin-layout"><aside class="admin-sidebar"><nav class="admin-navigation"><a href="dashboard.html">Dashboard</a><a href="orders.html">Orders</a><a href="products.html">Products</a><a href="uniform-sets.html" class="active">Uniform Sets</a><a href="sportsfest.html">Sportsfest</a><a href="students.html">Students</a><a href="register_A.html" data-main-admin-only hidden>Manage Admins</a></nav></aside>
-<main class="admin-main" data-order-filter="uniform-sets"><div class="admin-page-heading"><div><p class="eyebrow">Filtered Student Orders</p><h1>Uniform Set Orders</h1><p>Orders containing complete uniform sets and their selected sizes.</p></div><strong id="filteredOrdersCount"></strong></div><section class="admin-dashboard-section"><div class="admin-table-wrapper"><table class="admin-table"><thead><tr><th>Order ID</th><th>Student</th><th>Uniform Sets / Sizes</th><th>Date</th><th>Set Total</th><th>Payment</th><th>Status</th></tr></thead><tbody id="filteredOrdersTable"></tbody></table></div></section></main></div>
-<script src="../js/admin-auth.js"></script><script src="../js/admin-filtered-orders.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Uniform Sets | UniFit Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+</head>
+
+
+<body class="admin-body">
+
+
+    <!-- ADMIN HEADER -->
+
+    <header class="admin-header">
+
+        <a
+            href="dashboard.html"
+            class="admin-logo">
+
+            <img
+                src="../assets/images/Group 6.png"
+                alt="UniFit Logo">
+
+            <div>
+                <strong>UniFit</strong>
+                <span>Admin Panel</span>
+            </div>
+
+        </a>
+
+
+        <div class="admin-header-actions">
+
+            <span class="admin-name">
+                Administrator
+            </span>
+
+            <button
+                type="button"
+                class="btn admin-logout-button"
+                onclick="
+                    localStorage.removeItem('unifitAdminLoggedIn');
+                    localStorage.removeItem('unifitAdminName');
+                    window.location.href='admin_login.html';
+                ">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ADMIN LAYOUT -->
+
+    <div class="admin-layout">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="admin-sidebar">
+
+            <nav class="admin-navigation">
+
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+
+                <a href="orders.html">
+                    Orders
+                </a>
+
+                <a href="products.html">
+                    Products
+                </a>
+
+                <a
+                    href="uniform-sets.html"
+                    class="active">
+                    Uniform Sets
+                </a>
+
+                <a href="sportsfest.html">
+                    Sportsfest
+                </a>
+
+                <a href="customers.html">
+                    Customers
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+
+        <!-- CONTENT -->
+
+        <main class="admin-main">
+
+
+            <div class="admin-page-heading">
+
+                <p class="eyebrow">
+                    Uniform Management
+                </p>
+
+                <h1>
+                    Uniform Sets
+                </h1>
+
+                <p>
+                    View and manage complete UniFit uniform packages.
+                </p>
+
+            </div>
+
+
+
+            <!-- SUMMARY -->
+
+            <section class="admin-stat-grid">
+
+                <article class="admin-stat-card">
+
+                    <span>Total Sets</span>
+
+                    <strong>5</strong>
+
+                    <p>
+                        Available uniform packages
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>Standard Sets</span>
+
+                    <strong>3</strong>
+
+                    <p>
+                        Regular uniform sets
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>Complete Sets</span>
+
+                    <strong>2</strong>
+
+                    <p>
+                        Complete uniform packages
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>Active Sets</span>
+
+                    <strong>5</strong>
+
+                    <p>
+                        Available to customers
+                    </p>
+
+                </article>
+
+            </section>
+
+
+
+            <!-- LIST -->
+
+            <section class="admin-dashboard-section">
+
+                <div class="admin-section-heading">
+
+                    <p class="eyebrow">
+                        Uniform Packages
+                    </p>
+
+                    <h2>
+                        Uniform Set List
+                    </h2>
+
+                </div>
+
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Uniform Set</th>
+                                <th>Category</th>
+                                <th>Size Prices</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            <tr>
+
+                                <td>
+                                    Men's Uniform Set
+                                </td>
+
+                                <td>
+                                    School Uniform
+                                </td>
+
+                                <td>
+                                    S ₱1,100 |
+                                    M ₱1,150 |
+                                    L ₱1,200 |
+                                    XL ₱1,250
+                                </td>
+
+                                <td>
+                                    Active
+                                </td>
+
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    Women's Uniform Set
+                                </td>
+
+                                <td>
+                                    School Uniform
+                                </td>
+
+                                <td>
+                                    S ₱1,050 |
+                                    M ₱1,100 |
+                                    L ₱1,150 |
+                                    XL ₱1,200
+                                </td>
+
+                                <td>
+                                    Active
+                                </td>
+
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    PE Uniform Set
+                                </td>
+
+                                <td>
+                                    PE Uniform
+                                </td>
+
+                                <td>
+                                    S ₱700 |
+                                    M ₱750 |
+                                    L ₱800 |
+                                    XL ₱850
+                                </td>
+
+                                <td>
+                                    Active
+                                </td>
+
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    Men's Complete Uniform Set
+                                </td>
+
+                                <td>
+                                    Complete Uniform
+                                </td>
+
+                                <td>
+                                    S ₱1,800 |
+                                    M ₱1,900 |
+                                    L ₱2,000 |
+                                    XL ₱2,100
+                                </td>
+
+                                <td>
+                                    Active
+                                </td>
+
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>
+                                    Women's Complete Uniform Set
+                                </td>
+
+                                <td>
+                                    Complete Uniform
+                                </td>
+
+                                <td>
+                                    S ₱1,750 |
+                                    M ₱1,850 |
+                                    L ₱1,950 |
+                                    XL ₱2,050
+                                </td>
+
+                                <td>
+                                    Active
+                                </td>
+
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+
+</body>
+
+</html>

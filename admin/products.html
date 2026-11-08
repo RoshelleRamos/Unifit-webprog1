@@ -1,5 +1,639 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Product Orders | UniFit Admin</title><link rel="stylesheet" href="../css/style.css"></head>
-<body class="admin-body"><header class="admin-header"><a href="../index.html" class="admin-logo"><img src="../assets/images/Group 6.png" alt="UniFit Logo"><div><strong>UniFit</strong><span>Admin Panel</span></div></a><div class="admin-header-actions"><span class="admin-name">Administrator</span><button type="button" class="btn admin-logout-button">Logout</button></div></header>
-<div class="admin-layout"><aside class="admin-sidebar"><nav class="admin-navigation"><a href="dashboard.html">Dashboard</a><a href="orders.html">Orders</a><a href="products.html" class="active">Products</a><a href="uniform-sets.html">Uniform Sets</a><a href="sportsfest.html">Sportsfest</a><a href="students.html">Students</a><a href="register_A.html" data-main-admin-only hidden>Manage Admins</a></nav></aside>
-<main class="admin-main" data-order-filter="products"><div class="admin-page-heading"><div><p class="eyebrow">Filtered Student Orders</p><h1>Product Orders</h1><p>Orders containing products listed on the UniFit Products page.</p></div><strong id="filteredOrdersCount"></strong></div><section class="admin-dashboard-section"><div class="admin-table-wrapper"><table class="admin-table"><thead><tr><th>Order ID</th><th>Student</th><th>Products / Sizes</th><th>Date</th><th>Product Total</th><th>Payment</th><th>Status</th></tr></thead><tbody id="filteredOrdersTable"></tbody></table></div></section></main></div>
-<script src="../js/admin-auth.js"></script><script src="../js/admin-filtered-orders.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Products | UniFit Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+</head>
+
+
+<body class="admin-body">
+
+
+    <!-- ADMIN HEADER -->
+
+    <header class="admin-header">
+
+        <a
+            href="dashboard.html"
+            class="admin-logo">
+
+            <img
+                src="../assets/images/Group 6.png"
+                alt="UniFit Logo">
+
+            <div>
+                <strong>UniFit</strong>
+                <span>Admin Panel</span>
+            </div>
+
+        </a>
+
+
+        <div class="admin-header-actions">
+
+            <span class="admin-name">
+                Administrator
+            </span>
+
+            <button
+                type="button"
+                class="btn admin-logout-button"
+                onclick="
+                    localStorage.removeItem('unifitAdminLoggedIn');
+                    localStorage.removeItem('unifitAdminName');
+                    window.location.href='admin_login.html';
+                ">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+                <!-- ADMIN LAYOUT -->
+
+                <div class="admin-layout">
+
+
+                    <!-- SIDEBAR -->
+
+                    <aside class="admin-sidebar">
+
+                        <nav class="admin-navigation">
+
+                            <a href="dashboard.html">
+                                Dashboard
+                            </a>
+
+                            <a href="orders.html">
+                                Orders
+                            </a>
+
+                            <a
+                                href="products.html"
+                                class="active">
+                                Products
+                            </a>
+
+                            <a href="uniform-sets.html">
+                                Uniform Sets
+                            </a>
+
+                            <a href="sportsfest.html">
+                                Sportsfest
+                            </a>
+
+                            <a href="customers.html">
+                                Customers
+                            </a>
+
+                        </nav>
+
+                    </aside>
+
+
+
+                    <!-- PRODUCTS CONTENT -->
+
+                    <main class="admin-main">
+
+
+                    <div class="admin-page-heading admin-products-heading">
+
+                <div>
+                    <p class="eyebrow">
+                        Product Management
+                    </p>
+
+                    <h1>
+                        Products
+                    </h1>
+
+                    <p>
+                        View and manage products available in the UniFit store.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="btn primary-btn"
+                    id="addProductButton">
+                    + Add Product
+                </button>
+
+            </div>
+
+
+
+            <!-- SUMMARY CARDS -->
+
+            <section class="admin-stat-grid">
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Total Products
+                    </span>
+
+                    <strong id="adminTotalProducts">
+                        12
+                    </strong>
+
+                    <p>
+                        Products in the store
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Active Products
+                    </span>
+
+                    <strong id="adminActiveProducts">
+                        12
+                    </strong>
+
+                    <p>
+                        Available for customers
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Uniform Items
+                    </span>
+
+                    <strong id="adminUniformProducts">
+                        4
+                    </strong>
+
+                    <p>
+                        School uniform products
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Accessories
+                    </span>
+
+                    <strong id="adminAccessoryProducts">
+                        4
+                    </strong>
+
+                    <p>
+                        Uniform accessories
+                    </p>
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- PRODUCT LIST -->
+
+            <section class="admin-dashboard-section">
+
+                <div class="admin-section-heading">
+
+                    <p class="eyebrow">
+                        Store Products
+                    </p>
+
+                    <h2>
+                        Product List
+                    </h2>
+
+                </div>
+
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    Category
+                                </th>
+
+                                <th>
+                                    Price
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="adminProductsTable">
+
+
+                                <tr>
+                                    <td>Men's School Uniform Top</td>
+                                    <td>School Uniform</td>
+                                    <td>₱450.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Men's School Uniform Pants</td>
+                                    <td>School Uniform</td>
+                                    <td>₱500.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>PE Uniform Top</td>
+                                    <td>PE Uniform</td>
+                                    <td>₱350.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>PE Jogger Pants</td>
+                                    <td>PE Uniform</td>
+                                    <td>₱400.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>School ID Lace</td>
+                                    <td>ID Essentials</td>
+                                    <td>₱100.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>School Uniform Patch</td>
+                                    <td>Accessories</td>
+                                    <td>₱50.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>School Uniform Belt</td>
+                                    <td>Accessories</td>
+                                    <td>₱150.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>School Uniform Ribbon</td>
+                                    <td>Accessories</td>
+                                    <td>₱80.00</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button type="button" class="admin-view-order-button">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                <td>Pink Fabric</td>
+                                <td>Fabric Selection</td>
+                                <td>₱120.00 / yard</td>
+                                <td>Active</td>
+                                <td>
+                                    <button type="button" class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Black Fabric</td>
+                                <td>Fabric Selection</td>
+                                <td>₱150.00 / yard</td>
+                                <td>Active</td>
+                                <td>
+                                    <button type="button" class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Beige Fabric</td>
+                                <td>Fabric Selection</td>
+                                <td>₱180.00 / yard</td>
+                                <td>Active</td>
+                                <td>
+                                    <button type="button" class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Brown Fabric</td>
+                                <td>Fabric Selection</td>
+                                <td>₱150.00 / yard</td>
+                                <td>Active</td>
+                                <td>
+                                    <button type="button" class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+
+
+ <script>
+const addProductButton = document.getElementById("addProductButton");
+const productsTable = document.querySelector(".admin-table tbody");
+
+
+function updateCounters() {
+
+    const rows = productsTable.querySelectorAll("tr");
+
+    let total = 0;
+    let active = 0;
+    let uniforms = 0;
+    let accessories = 0;
+
+    rows.forEach(function(row) {
+
+        const cells = row.querySelectorAll("td");
+
+        // Skip empty/message rows
+        if (cells.length < 5) {
+            return;
+        }
+
+        total++;
+
+        const category =
+            cells[1].textContent.trim().toLowerCase();
+
+        const status =
+            cells[3].textContent.trim().toLowerCase();
+
+
+        if (status === "active") {
+            active++;
+        }
+
+
+        if (
+            category === "school uniform" ||
+            category === "pe uniform"
+        ) {
+            uniforms++;
+        }
+
+
+        if (
+            category === "accessories" ||
+            category === "id essentials"
+        ) {
+            accessories++;
+        }
+
+    });
+
+
+    document.getElementById(
+        "adminTotalProducts"
+    ).textContent = total;
+
+
+    document.getElementById(
+        "adminActiveProducts"
+    ).textContent = active;
+
+
+    document.getElementById(
+        "adminUniformProducts"
+    ).textContent = uniforms;
+
+
+    document.getElementById(
+        "adminAccessoryProducts"
+    ).textContent = accessories;
+}
+
+
+
+function editProduct(button) {
+
+    const row = button.closest("tr");
+
+    const cells = row.querySelectorAll("td");
+
+    const name = prompt(
+        "Product Name:",
+        cells[0].textContent.trim()
+    );
+
+    if (name === null) return;
+
+
+    const category = prompt(
+        "Category:",
+        cells[1].textContent.trim()
+    );
+
+    if (category === null) return;
+
+
+    const price = prompt(
+        "Price:",
+        cells[2].textContent.trim()
+    );
+
+    if (price === null) return;
+
+
+    const status = prompt(
+        "Status: Active or Inactive",
+        cells[3].textContent.trim()
+    );
+
+    if (status === null) return;
+
+
+    cells[0].textContent = name;
+    cells[1].textContent = category;
+    cells[2].textContent = price;
+    cells[3].textContent = status;
+
+    updateCounters();
+
+    alert("Product updated successfully.");
+}
+
+
+
+if (addProductButton) {
+
+    addProductButton.onclick = function() {
+
+        const name = prompt("Product Name:");
+
+        if (!name) return;
+
+
+        const category = prompt(
+            "Category:\nSchool Uniform\nPE Uniform\nAccessories\nID Essentials\nFabric Selection"
+        );
+
+        if (!category) return;
+
+
+        const price = prompt(
+            "Price:\nExample: ₱450.00"
+        );
+
+        if (!price) return;
+
+
+        const status = prompt(
+            "Status:",
+            "Active"
+        );
+
+        if (!status) return;
+
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${name}</td>
+
+            <td>${category}</td>
+
+            <td>${price}</td>
+
+            <td>${status}</td>
+
+            <td>
+                <button
+                    type="button"
+                    class="admin-view-order-button"
+                    onclick="editProduct(this)">
+                    Edit
+                </button>
+            </td>
+        `;
+
+        productsTable.appendChild(row);
+
+        updateCounters();
+
+        alert("Product added successfully.");
+    };
+}
+
+
+
+document
+    .querySelectorAll("#adminProductsTable .admin-view-order-button")
+    .forEach(function(button) {
+
+        button.onclick = function() {
+
+            editProduct(button);
+
+        };
+
+    });
+
+
+updateCounters();
+</script>
+
+</body>
+
+</html>
