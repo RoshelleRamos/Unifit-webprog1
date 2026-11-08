@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Sportsfest | UniFit Admin</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+</head>
+
+
+<body class="admin-body">
+
+
+    <!-- ADMIN HEADER -->
+
+    <header class="admin-header">
+
+        <a
+            href="dashboard.html"
+            class="admin-logo">
+
+            <img
+                src="../assets/images/Group 6.png"
+                alt="UniFit Logo">
+
+            <div>
+                <strong>UniFit</strong>
+                <span>Admin Panel</span>
+            </div>
+
+        </a>
+
+
+        <div class="admin-header-actions">
+
+            <span class="admin-name">
+                Administrator
+            </span>
+
+            <button
+                type="button"
+                class="btn admin-logout-button"
+                onclick="
+                    localStorage.removeItem('unifitAdminLoggedIn');
+                    localStorage.removeItem('unifitAdminName');
+                    window.location.href='admin_login.html';
+                ">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ADMIN LAYOUT -->
+
+    <div class="admin-layout">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="admin-sidebar">
+
+            <nav class="admin-navigation">
+
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+
+                <a href="orders.html">
+                    Orders
+                </a>
+
+                <a href="products.html">
+                    Products
+                </a>
+
+                <a href="uniform-sets.html">
+                    Uniform Sets
+                </a>
+
+                <a
+                    href="sportsfest.html"
+                    class="active">
+                    Sportsfest
+                </a>
+
+                <a href="customers.html">
+                    Customers
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+
+        <!-- CONTENT -->
+
+        <main class="admin-main">
+
+
+            <div class="admin-page-heading">
+
+                <p class="eyebrow">
+                    Sportsfest Management
+                </p>
+
+                <h1>
+                    Sportsfest
+                </h1>
+
+                <p>
+                    View and manage Sportsfest team uniforms.
+                </p>
+
+            </div>
+
+
+
+            <!-- SUMMARY CARDS -->
+
+            <section class="admin-stat-grid">
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Total Teams
+                    </span>
+
+                    <strong>
+                        8
+                    </strong>
+
+                    <p>
+                        Sportsfest teams
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Jersey Sets
+                    </span>
+
+                    <strong>
+                        8
+                    </strong>
+
+                    <p>
+                        Complete basketball sets
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Upper Jerseys
+                    </span>
+
+                    <strong>
+                        8
+                    </strong>
+
+                    <p>
+                        Jersey tops
+                    </p>
+
+                </article>
+
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Active Items
+                    </span>
+
+                    <strong>
+                        16
+                    </strong>
+
+                    <p>
+                        Available Sportsfest items
+                    </p>
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- SPORTS LIST -->
+
+            <section class="admin-dashboard-section">
+
+                <div class="admin-section-heading">
+
+                    <p class="eyebrow">
+                        Team Collection
+                    </p>
+
+                    <h2>
+                        Sportsfest Product List
+                    </h2>
+
+                </div>
+
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Team</th>
+                                <th>Product</th>
+                                <th>Sizes</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            <!-- RED -->
+
+                            <tr>
+                                <td>Red Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Red Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- ORANGE -->
+
+                            <tr>
+                                <td>Orange Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Orange Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- YELLOW -->
+
+                            <tr>
+                                <td>Yellow Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Yellow Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- VIOLET -->
+
+                            <tr>
+                                <td>Violet Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Violet Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- PINK -->
+
+                            <tr>
+                                <td>Pink Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Pink Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- GREEN -->
+
+                            <tr>
+                                <td>Green Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Green Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- BLUE -->
+
+                            <tr>
+                                <td>Blue Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Blue Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <!-- BLACK -->
+
+                            <tr>
+                                <td>Black Team</td>
+                                <td>Basketball Jersey Set</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱750.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Black Team</td>
+                                <td>Upper Jersey</td>
+                                <td>S, M, L, XL</td>
+                                <td>₱500.00</td>
+                                <td>Active</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="admin-view-order-button">
+                                        Edit
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+
+</body>
+
+</html>
