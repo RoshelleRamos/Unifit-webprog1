@@ -1,4 +1,29 @@
 /* =========================================================
+   STUDENT NAVIGATION AUTH STATE
+========================================================= */
+
+(function () {
+    let student = null;
+    try {
+        student = JSON.parse(localStorage.getItem("unifitCurrentUser") || "null");
+    } catch (error) {
+        student = null;
+    }
+
+    const isLoggedIn =
+        localStorage.getItem("unifitLoggedIn") === "true" &&
+        student && student.role === "student";
+
+    document.querySelectorAll('a[href="login.html"]').forEach(function (link) {
+        (link.closest("li") || link).hidden = Boolean(isLoggedIn);
+    });
+
+    document.querySelectorAll('a[href="profile.html"]').forEach(function (link) {
+        (link.closest("li") || link).hidden = !isLoggedIn;
+    });
+})();
+
+/* =========================================================
    FABRIC & COLOR SELECTION
 ========================================================= */
 
@@ -650,7 +675,8 @@
         document.getElementById("couponMessage");
 
 
-    let cartPageCouponPercent = 0;
+    let cartPageCouponPercent =
+        Number(localStorage.getItem("unifitCouponPercent")) || 0;
 
 
 
@@ -1298,6 +1324,32 @@ if (couponButton) {
 
             if (code === "STUDENT10") {
 
+                let couponStudent = null;
+                let usedStudent10 = [];
+                try {
+                    couponStudent = JSON.parse(localStorage.getItem("unifitCurrentUser") || "null");
+                    usedStudent10 = JSON.parse(localStorage.getItem("unifitUsedStudent10") || "[]");
+                } catch (error) {
+                    couponStudent = null;
+                    usedStudent10 = [];
+                }
+
+                const couponEmail = couponStudent && couponStudent.email
+                    ? couponStudent.email.trim().toLowerCase()
+                    : "";
+
+                if (!couponEmail || usedStudent10.includes(couponEmail)) {
+                    cartPageCouponPercent = 0;
+                    localStorage.removeItem("unifitCouponPercent");
+                    localStorage.removeItem("unifitCouponCode");
+                    couponMessageElement.textContent = !couponEmail
+                        ? "Please login with a student account to use this coupon."
+                        : "STUDENT10 has already been used by this student.";
+                    couponMessageElement.classList.add("error");
+                    updateCartSummary();
+                    return;
+                }
+
                 cartPageCouponPercent = 10;
 
 
@@ -1305,6 +1357,8 @@ if (couponButton) {
                     "unifitCouponPercent",
                     "10"
                 );
+
+                localStorage.setItem("unifitCouponCode", "STUDENT10");
 
 
                 couponMessageElement.textContent =
@@ -1327,6 +1381,8 @@ if (couponButton) {
                     "unifitCouponPercent"
                 );
 
+                localStorage.removeItem("unifitCouponCode");
+
 
                 couponMessageElement.textContent =
                     "Please enter a coupon code.";
@@ -1347,6 +1403,8 @@ if (couponButton) {
                 localStorage.removeItem(
                     "unifitCouponPercent"
                 );
+
+                localStorage.removeItem("unifitCouponCode");
 
 
                 couponMessageElement.textContent =
@@ -1454,6 +1512,9 @@ passwordToggleButtons.forEach(
 ========================================================= */
 
 (function () {
+
+    /* Student authentication is now handled by js/auth.js. */
+    return;
 
     /* =====================================================
        REGISTER
@@ -2972,12 +3033,14 @@ updateUniFitCartCount();
        LOAD CUSTOMER
     ====================================================== */
 
-    const currentUser =
-        JSON.parse(
-            localStorage.getItem(
-                "unifitCurrentUser"
-            ) || "null"
+    let currentUser = null;
+    try {
+        currentUser = JSON.parse(
+            localStorage.getItem("unifitCurrentUser") || "null"
         );
+    } catch (error) {
+        currentUser = null;
+    }
 
 
     if (currentUser) {
@@ -3197,9 +3260,31 @@ updateUniFitCartCount();
        PLACE ORDER
     ====================================================== */
 
+    function compressReceipt(file) {
+        return new Promise(function (resolve, reject) {
+            const reader = new FileReader();
+            reader.onerror = function () { reject(new Error("Unable to read receipt.")); };
+            reader.onload = function () {
+                const image = new Image();
+                image.onerror = function () { reject(new Error("Invalid receipt image.")); };
+                image.onload = function () {
+                    const maxSide = 1200;
+                    const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+                    const canvas = document.createElement("canvas");
+                    canvas.width = Math.max(1, Math.round(image.width * scale));
+                    canvas.height = Math.max(1, Math.round(image.height * scale));
+                    canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL("image/jpeg", 0.72));
+                };
+                image.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
     checkoutForm.addEventListener(
         "submit",
-        function (event) {
+        async function (event) {
 
             event.preventDefault();
 
@@ -3234,6 +3319,12 @@ updateUniFitCartCount();
                     .getElementById(
                         "checkoutEmail"
                     )
+                    .value
+                    .trim();
+
+            const notes =
+                document
+                    .getElementById("checkoutNotes")
                     .value
                     .trim();
 
@@ -3304,6 +3395,24 @@ if (!gcashPaidConfirmation.checked) {
     return;
 }
 
+            const receiptFile = gcashReceipt.files[0];
+            if (!/^image\/(png|jpe?g)$/i.test(receiptFile.type)) {
+                alert("Receipt must be a PNG or JPG image.");
+                return;
+            }
+            if (receiptFile.size > 8 * 1024 * 1024) {
+                alert("Receipt image must be 8 MB or smaller.");
+                return;
+            }
+
+            let paymentReceiptData = "";
+            try {
+                paymentReceiptData = await compressReceipt(receiptFile);
+            } catch (error) {
+                alert(error.message || "Unable to process the payment receipt.");
+                return;
+            }
+
             /* =================================================
                CALCULATE ORDER
             ================================================= */
@@ -3373,6 +3482,9 @@ if (!gcashPaidConfirmation.checked) {
 
             const newOrder = {
 
+                studentId:
+                    currentUser && currentUser.id ? currentUser.id : "",
+
                 orderNumber:
                     orderNumber,
 
@@ -3399,8 +3511,14 @@ if (!gcashPaidConfirmation.checked) {
                 payment:
                   "GCash",
 
-                  paymentReference:
+                paymentReference:
                   gcashReference,
+
+                  paymentReceiptName:
+                    gcashReceipt.files[0].name,
+
+                  paymentReceiptData:
+                    paymentReceiptData,
 
                   paymentStatus:
                     "For Verification",
@@ -3431,12 +3549,18 @@ if (!gcashPaidConfirmation.checked) {
                     SAVE ORDER
                     ================================================= */
 
-                    const previousOrders =
-                        JSON.parse(
-                            localStorage.getItem(
-                                "unifitOrders"
-                            )
-                        ) || [];
+                    let previousOrders = [];
+
+                    try {
+                        const savedOrders = JSON.parse(
+                            localStorage.getItem("unifitOrders") || "[]"
+                        );
+                        previousOrders = Array.isArray(savedOrders)
+                            ? savedOrders
+                            : [];
+                    } catch (error) {
+                        previousOrders = [];
+                    }
 
 
                     previousOrders.unshift(
