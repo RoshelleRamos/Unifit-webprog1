@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | UniFit Admin</title><link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="admin-body">
+<header class="admin-header"><a href="../index.html" class="admin-logo"><img src="../assets/images/Group 6.png" alt="UniFit Logo"><div><strong>UniFit</strong><span>Admin Panel</span></div></a><div class="admin-header-actions"><span class="admin-name">Administrator</span><button type="button" class="btn admin-logout-button">Logout</button></div></header>
+<div class="admin-layout">
+<aside class="admin-sidebar"><nav class="admin-navigation"><a href="dashboard.html">Dashboard</a><a href="orders.html">Orders</a><a href="products.html">Products</a><a href="uniform-sets.html">Uniform Sets</a><a href="sportsfest.html">Sportsfest</a><a href="students.html" class="active">Students</a><a href="register_A.html" data-main-admin-only hidden>Manage Admins</a></nav></aside>
+<main class="admin-main">
+<div class="admin-page-heading"><div><p class="eyebrow">Student Management</p><h1>Registered Students</h1><p>View student accounts and their order activity.</p></div></div>
+<section class="admin-dashboard-section"><div class="admin-table-wrapper"><table class="admin-table"><thead><tr><th>Student</th><th>Email</th><th>Contact</th><th>Orders</th><th>Total Spent</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminStudentsTable"></tbody></table></div></section>
+</main></div>
+<script src="../js/admin-auth.js"></script><script src="../js/admin-students.js"></script>
+</body></html>

@@ -4418,6 +4418,10 @@ img {
     display: block;
 }
 
+.student-order-details { margin: 0 24px 18px; padding: 14px 16px; border-radius: 9px; background: #f5efe6; color: #5d4037; }
+.student-order-details p { margin: 5px 0; }
+.status-cancelled { background: #fde5e2; color: #a12a20; }
+
 
 .orders-empty h3 {
     margin-bottom: 5px;
@@ -7091,6 +7095,16 @@ body {
     background: #5d4037;
 }
 
+.admin-order-action-button.danger { border-color: #b3261e; color: #b3261e; }
+.admin-order-action-button.danger:hover { background: #b3261e; color: #fff; }
+.admin-receipt-preview { grid-column: 1 / -1; }
+.admin-receipt-preview img { display: block; width: 100%; max-height: 480px; margin-top: 10px; object-fit: contain; background: #fff; border-radius: 8px; }
+.admin-cancel-note { grid-column: 1 / -1; border-left: 4px solid #b3261e; background: #fdecea; }
+.student-cancel-note { margin-top: 10px !important; padding: 10px 12px; border-left: 4px solid #b3261e; background: #fdecea; color: #8a1f18; font-weight: 700; }
+.admin-rejection-note { grid-column: 1 / -1; border-left: 4px solid #b3261e; background: #fdecea; }
+.admin-resubmission-note { grid-column: 1 / -1; border-left: 4px solid #2e7d32; background: #e8f5e9; }
+.student-rejection-note { margin-top: 10px !important; padding: 10px 12px; border-left: 4px solid #b3261e; background: #fdecea; color: #8a1f18; font-weight: 700; }
+
 .admin-order-completed-message {
     margin: 0;
     padding: 12px 15px;
@@ -7100,3 +7114,28 @@ body {
     font-weight: 700;
 }
 
+.admin-payment-badge { display: inline-flex; margin: 2px 0 7px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+.admin-payment-badge.received { background: #dff3e4; color: #1d6b34; }
+.admin-payment-badge.not-received { background: #fde5e2; color: #a12a20; }
+.admin-product-line-total { grid-column: 2 / -1; font-size: 12px; font-weight: 700; color: #5d4037; text-align: right; }
+.admin-order-summary { margin-top: 20px; margin-left: auto; max-width: 390px; background: #f5efe6; border-radius: 10px; padding: 14px 16px; }
+.admin-order-summary div { display: flex; justify-content: space-between; gap: 20px; padding: 5px 0; }
+.admin-order-summary .total { margin-top: 7px; padding-top: 12px; border-top: 1px solid #cfbda9; color: #3e2723; font-size: 17px; }
+.admin-order-notes { margin-top: 20px; padding: 14px 16px; border: 1px solid #e3d2bf; border-radius: 10px; }
+.admin-order-notes p { margin: 7px 0 0; color: #66564f; }
+.admin-table-payment-status { display: block; margin-top: 4px; color: #76645d; font-weight: 700; }
+.admin-filtered-item { min-width: 280px; padding: 5px 0; border-bottom: 1px solid #eadfd4; line-height: 1.45; }
+.admin-filtered-item:last-child { border-bottom: 0; }
+
+.auth-message, .admin-form-message { min-height: 1.4rem; margin-top: 14px; font-size: .92rem; font-weight: 600; }
+.auth-message.error, .admin-form-message.error { color: #b3261e; }
+.auth-message.success, .admin-form-message.success { color: #2e7d32; }
+.admin-account-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
+.admin-account-form .full-width { grid-column: 1 / -1; }
+.admin-role-badge { font-weight: 700; color: #74441f; }
+@media (max-width: 680px) { .admin-account-form { grid-template-columns: 1fr; } }
+/* Keep authentication-controlled navigation items hidden even when
+   their parent navigation uses an explicit display rule. */
+[hidden] {
+    display: none !important;
+}
