@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | UniFit</title>
+
+    <!-- MAIN CSS -->
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+
+</head>
+
+
+<body class="admin-body">
+
+
+    <!-- =====================================================
+         ADMIN HEADER
+    ====================================================== -->
+
+    <header class="admin-header">
+
+        <a
+            href="../index.html"
+            class="admin-logo">
+
+            <img
+                src="../assets/images/Group 6.png"
+                alt="UniFit Logo">
+
+            <div>
+
+                <strong>
+                    UniFit
+                </strong>
+
+                <span>
+                    Admin Panel
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <div class="admin-header-actions">
+
+            <span class="admin-name">
+                Administrator
+            </span>
+
+            <button
+                type="button"
+                class="btn admin-logout-button"
+                onclick="
+                    localStorage.removeItem('unifitAdminLoggedIn');
+                    localStorage.removeItem('unifitAdminName');
+                    window.location.href='admin_login.html';
+                ">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         ADMIN LAYOUT
+    ====================================================== -->
+
+    <div class="admin-layout">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside class="admin-sidebar">
+
+            <nav class="admin-navigation">
+
+                <a
+                    href="dashboard.html"
+                    class="active">
+
+                    Dashboard
+
+                </a>
+
+
+                <a href="orders.html">
+                    Orders
+                </a>
+
+
+                <a href="#">
+                    Products
+                </a>
+
+
+                <a href="#">
+                    Uniform Sets
+                </a>
+
+
+                <a href="#">
+                    Sportsfest
+                </a>
+
+
+                <a href="#">
+                    Customers
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+
+        <!-- =================================================
+             MAIN DASHBOARD
+        ================================================== -->
+
+        <main class="admin-main">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="admin-page-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        UniFit Administration
+                    </p>
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                    <p>
+                        Monitor orders, products,
+                        customers, and payments.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DASHBOARD SUMMARY
+            ================================================== -->
+
+            <section class="admin-stat-grid">
+
+
+                <!-- TOTAL ORDERS -->
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Total Orders
+                    </span>
+
+                    <strong id="adminTotalOrders">
+                        0
+                    </strong>
+
+                    <p>
+                        All customer orders
+                    </p>
+
+                </article>
+
+
+
+                <!-- PENDING ORDERS -->
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Pending Orders
+                    </span>
+
+                    <strong id="adminPendingOrders">
+                        0
+                    </strong>
+
+                    <p>
+                        Waiting for processing
+                    </p>
+
+                </article>
+
+
+
+                <!-- PAYMENT VERIFICATION -->
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Payment Verification
+                    </span>
+
+                    <strong id="adminPaymentOrders">
+                        0
+                    </strong>
+
+                    <p>
+                        GCash payments to review
+                    </p>
+
+                </article>
+
+
+
+                <!-- TOTAL SALES -->
+
+                <article class="admin-stat-card">
+
+                    <span>
+                        Total Sales
+                    </span>
+
+                    <strong id="adminTotalSales">
+                        ₱0.00
+                    </strong>
+
+                    <p>
+                        Recorded order value
+                    </p>
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 RECENT ORDERS
+            ================================================== -->
+
+            <section class="admin-dashboard-section">
+
+                <div class="admin-section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            Order Management
+                        </p>
+
+                        <h2>
+                            Recent Orders
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-table-wrapper">
+
+                    <table class="admin-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Order ID
+                                </th>
+
+                                <th>
+                                    Customer
+                                </th>
+
+                                <th>
+                                    Total
+                                </th>
+
+                                <th>
+                                    Payment
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="adminOrdersTable">
+
+                            <tr>
+
+                                <td colspan="5"
+                                    class="admin-empty">
+
+                                    No orders available yet.
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- ADMIN JAVASCRIPT -->
+    <script src="../js/admin.js"></script>
+
+    <script>
+function logoutAdmin() {
+
+    localStorage.removeItem("unifitAdminLoggedIn");
+    localStorage.removeItem("unifitAdminName");
+
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+
+</html>

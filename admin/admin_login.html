@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | UniFit</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+</head>
+
+
+<body class="admin-login-body">
+
+
+    <main class="admin-login-page">
+
+        <section class="admin-login-card">
+
+
+            <!-- LOGO -->
+
+            <a
+                href="../index.html"
+                class="admin-login-logo">
+
+                <img
+                    src="../assets/images/Group 6.png"
+                    alt="UniFit Logo">
+
+                <div>
+                    <strong>UniFit</strong>
+                    <span>Administrator</span>
+                </div>
+
+            </a>
+
+
+            <!-- HEADING -->
+
+            <div class="admin-login-heading">
+
+                <p class="eyebrow">
+                    Administrator Access
+                </p>
+
+                <h1>
+                    Admin Login
+                </h1>
+
+                <p>
+                     Sign in using an authorized
+                       administrator account.
+                </p>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <form id="adminLoginForm">
+
+
+                <div class="form-group">
+
+                    <label for="adminEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="adminEmail"
+                        placeholder="admin@unifit.com"
+                        required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                <label for="adminPassword">
+                    Password
+                </label>
+
+                <div class="admin-password-wrapper">
+
+                    <input
+                        type="password"
+                        id="adminPassword"
+                        placeholder="Enter password"
+                        required>
+
+                    <button
+                        type="button"
+                        id="toggleAdminPassword"
+                        class="admin-password-eye"
+                        aria-label="Show password">
+
+                        👁
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+                <p
+                    id="adminLoginMessage"
+                    class="admin-login-message">
+                </p>
+
+
+                <button
+                    type="submit"
+                    class="btn primary-btn admin-login-button">
+
+                    Login as Admin
+
+                </button>
+
+            </form>
+
+
+            <!-- BACK TO STORE -->
+
+            <a
+                href="../index.html"
+                class="admin-back-link">
+
+                ← Back to UniFit Store
+
+            </a>
+
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const adminLoginForm =
+        document.getElementById("adminLoginForm");
+
+    const emailInput =
+        document.getElementById("adminEmail");
+
+    const passwordInput =
+        document.getElementById("adminPassword");
+
+    const loginMessage =
+        document.getElementById("adminLoginMessage");
+
+    const togglePassword =
+        document.getElementById("toggleAdminPassword");
+
+
+    /* SHOW / HIDE PASSWORD */
+
+    if (togglePassword && passwordInput) {
+
+        togglePassword.addEventListener(
+            "click",
+            function () {
+
+                if (passwordInput.type === "password") {
+
+                    passwordInput.type = "text";
+
+                    togglePassword.textContent = "🙈";
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        "Hide password"
+                    );
+
+                } else {
+
+                    passwordInput.type = "password";
+
+                    togglePassword.textContent = "👁";
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        "Show password"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ADMIN LOGIN */
+
+    if (adminLoginForm) {
+
+        adminLoginForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    emailInput.value.trim();
+
+                const password =
+                    passwordInput.value;
+
+
+                const ADMIN_EMAIL =
+                    "admin@unifit.com";
+
+                const ADMIN_PASSWORD =
+                    "Admin123";
+
+
+                if (
+                    email === ADMIN_EMAIL &&
+                    password === ADMIN_PASSWORD
+                ) {
+
+                    localStorage.setItem(
+                        "unifitAdminLoggedIn",
+                        "true"
+                    );
+
+                    localStorage.setItem(
+                        "unifitAdminName",
+                        "Administrator"
+                    );
+
+
+                    loginMessage.textContent =
+                        "Login successful.";
+
+                    loginMessage.style.color =
+                        "green";
+
+
+                    window.location.href =
+                        "dashboard.html";
+
+                }
+
+                else {
+
+                    loginMessage.textContent =
+                        "Invalid admin email or password.";
+
+                    loginMessage.style.color =
+                        "red";
+
+                }
+
+            }
+        );
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>
