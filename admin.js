@@ -2,6 +2,15 @@
    UNIFIT ADMIN LOGIN
 ===================================================== */
 
+function getCurrentAdminActor() {
+    try {
+        const session = JSON.parse(sessionStorage.getItem("unifitAdminSession") || "null");
+        return session ? { id: session.id, name: session.name, email: session.email } : { id: "unknown", name: "Administrator", email: "" };
+    } catch (error) {
+        return { id: "unknown", name: "Administrator", email: "" };
+    }
+}
+
 (function () {
 
     const adminLoginForm =
@@ -102,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (adminLoggedIn !== "true") {
 
-        window.location.href = "login.html";
+        window.location.href = "admin_login.html";
 
         return;
     }
@@ -178,6 +187,8 @@ adminMenuLinks.forEach(function (link) {
         link.classList.add("active");
 
     });
+
+});
 
     /* =================================================
    LOAD CUSTOMER ORDERS
@@ -347,7 +358,10 @@ if (adminOrdersList) {
                 </td>
 
                 <td>
-                    ${order.payment || "—"}
+                    ${order.payment || "GCash"}
+                    <small class="admin-table-payment-status">
+                        ${order.paymentStatus || "For Verification"}
+                    </small>
                 </td>
 
                 <td>
@@ -410,6 +424,12 @@ if (adminOrdersList) {
                         return;
                     }
 
+                    function stampOrder() {
+                        const actor = getCurrentAdminActor();
+                        orders[orderIndex].statusUpdatedBy = actor.name;
+                        orders[orderIndex].statusUpdatedAt = new Date().toISOString();
+                    }
+
 
                     const customer =
                         order.customer || {};
@@ -430,6 +450,10 @@ if (adminOrdersList) {
                     } else {
 
                         items.forEach(function (item) {
+
+                            const itemQuantity = Number(item.quantity) || 1;
+                            const itemUnitPrice = Number(item.price) || 0;
+                            const itemLineTotal = itemQuantity * itemUnitPrice;
 
                             productsHTML += `
 
@@ -455,6 +479,16 @@ if (adminOrdersList) {
                                             ${item.quantity || 1}
                                         </p>
 
+                                        <p>
+                                            <strong>Variant/Fabric:</strong>
+                                            ${item.fabric || "Standard"}
+                                        </p>
+
+                                        <p>
+                                            <strong>Unit Price:</strong>
+                                            ₱${itemUnitPrice.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </p>
+
                                     </div>
 
                                     <strong>
@@ -468,6 +502,10 @@ if (adminOrdersList) {
                                             }
                                         )}
                                     </strong>
+
+                                    <span class="admin-product-line-total">
+                                        Line total: ₱${itemLineTotal.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </span>
 
                                 </div>
 
@@ -488,7 +526,7 @@ if (adminOrdersList) {
                             </div>
 
                             <div class="admin-order-info-item">
-                                <strong>Customer</strong>
+                                <strong>Student</strong>
                                 ${
                                     customer.fullName ||
                                     customer.name ||
@@ -521,11 +559,31 @@ if (adminOrdersList) {
 
                             <div class="admin-order-info-item">
                                 <strong>Payment Status</strong>
+                                <span class="admin-payment-badge ${order.paymentStatus === "Verified" ? "received" : "not-received"}">
+                                    Payment Received: ${order.paymentStatus === "Verified" ? "YES" : "NO"}
+                                </span>
                                 ${
                                     order.paymentStatus ||
                                     "—"
                                 }
                             </div>
+
+                            <div class="admin-order-info-item">
+                                <strong>GCash Reference</strong>
+                                ${order.paymentReference || "—"}
+                            </div>
+
+                            <div class="admin-order-info-item">
+                                <strong>Receipt File</strong>
+                                ${order.paymentReceiptName || "—"}
+                            </div>
+
+                            ${order.paymentReceiptData && order.paymentReceiptData.startsWith("data:image/") ? `
+                                <div class="admin-order-info-item admin-receipt-preview">
+                                    <strong>Payment Receipt Preview</strong>
+                                    <img src="${order.paymentReceiptData}" alt="GCash payment receipt">
+                                </div>
+                            ` : ""}
 
                             <div class="admin-order-info-item">
                                 <strong>Order Status</strong>
@@ -548,6 +606,48 @@ if (adminOrdersList) {
                                 )}
                             </div>
 
+                            <div class="admin-order-info-item">
+                                <strong>Last Updated By</strong>
+                                ${order.statusUpdatedBy || "Not updated yet"}
+                                ${order.statusUpdatedAt ? `<small>${new Date(order.statusUpdatedAt).toLocaleString("en-PH")}</small>` : ""}
+                            </div>
+
+                            ${order.cancelNote ? `
+                                <div class="admin-order-info-item admin-cancel-note">
+                                    <strong>Cancellation Note</strong>
+                                    ${order.cancelNote}
+                                    <small>Cancelled by ${order.cancelledBy || "Administrator"}${order.cancelledAt ? " — " + new Date(order.cancelledAt).toLocaleString("en-PH") : ""}</small>
+                                </div>
+                            ` : ""}
+
+                            ${order.rejectionNote ? `
+                                <div class="admin-order-info-item admin-rejection-note">
+                                    <strong>Payment Rejection Note</strong>
+                                    ${order.rejectionNote}
+                                    <small>Rejected by ${order.rejectedBy || "Administrator"}${order.rejectedAt ? " — " + new Date(order.rejectedAt).toLocaleString("en-PH") : ""}</small>
+                                </div>
+                            ` : ""}
+
+                            ${order.resubmissionNote ? `
+                                <div class="admin-order-info-item admin-resubmission-note">
+                                    <strong>Student Re-upload Note</strong>
+                                    ${order.resubmissionNote}
+                                    ${order.receiptReuploadedAt ? `<small>${new Date(order.receiptReuploadedAt).toLocaleString("en-PH")}</small>` : ""}
+                                </div>
+                            ` : ""}
+
+                        </div>
+
+
+                        <div class="admin-order-summary">
+                            <div><span>Subtotal</span><strong>₱${Number(order.subtotal || 0).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
+                            <div><span>Discount</span><strong>- ₱${Number(order.discount || 0).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
+                            <div class="total"><span>Student Order Total</span><strong>₱${Number(order.total || 0).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
+                        </div>
+
+                        <div class="admin-order-notes">
+                            <strong>Student Notes</strong>
+                            <p>${order.notes || "No special instructions."}</p>
                         </div>
 
 
@@ -566,16 +666,26 @@ if (adminOrdersList) {
                         <div class="admin-order-action-buttons">
 
                             ${
-                                order.paymentStatus !== "Verified"
+                                order.paymentStatus !== "Verified" &&
+                                order.status !== "Payment Rejected" &&
+                                order.status !== "Cancelled"
                                     ? `
                                         <button
                                             type="button"
                                             class="admin-order-action-button"
                                             id="approvePaymentButton"
                                             data-order-index="${orderIndex}">
-                                            Approve Payment
+                                            Confirm Payment Received
                                         </button>
                                     `
+                                    : ""
+                            }
+
+                            ${
+                                order.paymentStatus !== "Verified" &&
+                                order.status !== "Payment Rejected" &&
+                                order.status !== "Cancelled"
+                                    ? `<button type="button" class="admin-order-action-button danger" id="rejectPaymentButton">Reject Payment</button>`
                                     : ""
                             }
 
@@ -639,6 +749,14 @@ if (adminOrdersList) {
                                     : ""
                             }
 
+                            ${
+                                order.status !== "Completed" &&
+                                order.status !== "Cancelled" &&
+                                order.status !== "Payment Rejected"
+                                    ? `<button type="button" class="admin-order-action-button danger" id="cancelOrderButton">Cancel Order</button>`
+                                    : ""
+                            }
+
                         </div>
 
                     </div>
@@ -660,6 +778,14 @@ if (adminOrdersList) {
                                     orders[orderIndex].paymentStatus =
                                         "Verified";
 
+                                    orders[orderIndex].status =
+                                        "Pending";
+
+                                    const paymentActor = getCurrentAdminActor();
+                                    orders[orderIndex].paymentVerifiedBy = paymentActor.name;
+                                    orders[orderIndex].paymentVerifiedAt = new Date().toISOString();
+                                    stampOrder();
+
                                     localStorage.setItem(
                                         "unifitOrders",
                                         JSON.stringify(orders)
@@ -676,13 +802,24 @@ if (adminOrdersList) {
 
                         }
 
-                        orderDetailsContent.innerHTML = `
-
-                            // ORDER DETAILS
-                            // PRODUCTS
-                            // MANAGE ORDER BUTTONS
-
-                        `;
+                        const rejectPaymentButton = document.getElementById("rejectPaymentButton");
+                        if (rejectPaymentButton) rejectPaymentButton.addEventListener("click", function () {
+                            const rejectionNote = window.prompt("Enter the reason for rejecting this payment receipt:", "");
+                            if (rejectionNote === null) return;
+                            if (!rejectionNote.trim()) {
+                                alert("Payment rejection note is required.");
+                                return;
+                            }
+                            const actor = getCurrentAdminActor();
+                            orders[orderIndex].paymentStatus = "Rejected";
+                            orders[orderIndex].status = "Payment Rejected";
+                            orders[orderIndex].rejectionNote = rejectionNote.trim();
+                            orders[orderIndex].rejectedBy = actor.name;
+                            orders[orderIndex].rejectedAt = new Date().toISOString();
+                            stampOrder();
+                            localStorage.setItem("unifitOrders", JSON.stringify(orders));
+                            window.location.reload();
+                        });
 
                         /* ---------------------------------------------
                             MARK AS PROCESSING
@@ -700,6 +837,8 @@ if (adminOrdersList) {
                                         orders[orderIndex].status =
                                             "Processing";
 
+                                        stampOrder();
+
                                         localStorage.setItem(
                                             "unifitOrders",
                                             JSON.stringify(orders)
@@ -716,6 +855,24 @@ if (adminOrdersList) {
 
                             }
 
+                            const cancelOrderButton = document.getElementById("cancelOrderButton");
+                            if (cancelOrderButton) cancelOrderButton.addEventListener("click", function () {
+                                const cancelNote = window.prompt("Enter the reason for cancelling this student order:", "");
+                                if (cancelNote === null) return;
+                                if (!cancelNote.trim()) {
+                                    alert("Cancellation note is required.");
+                                    return;
+                                }
+                                const actor = getCurrentAdminActor();
+                                orders[orderIndex].status = "Cancelled";
+                                orders[orderIndex].cancelNote = cancelNote.trim();
+                                orders[orderIndex].cancelledBy = actor.name;
+                                orders[orderIndex].cancelledAt = new Date().toISOString();
+                                stampOrder();
+                                localStorage.setItem("unifitOrders", JSON.stringify(orders));
+                                window.location.reload();
+                            });
+
                             /* ---------------------------------------------
                             READY FOR PICKUP
                             --------------------------------------------- */
@@ -731,6 +888,8 @@ if (adminOrdersList) {
 
                                         orders[orderIndex].status =
                                             "Ready for Pickup";
+
+                                        stampOrder();
 
                                         localStorage.setItem(
                                             "unifitOrders",
@@ -764,6 +923,8 @@ if (adminOrdersList) {
                                         orders[orderIndex].status =
                                             "Completed";
 
+                                        stampOrder();
+
                                         localStorage.setItem(
                                             "unifitOrders",
                                             JSON.stringify(orders)
@@ -779,15 +940,6 @@ if (adminOrdersList) {
                                 );
 
                             }
-
-
-                        /* SHOW MODAL */
-
-                        if (orderModal) {
-
-                            orderModal.classList.add("show");
-
-                        }
 
 
                     if (orderModal) {
@@ -818,6 +970,3 @@ if (adminOrdersList) {
     }
 
 }
-
-});
-
