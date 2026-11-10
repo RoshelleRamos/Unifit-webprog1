@@ -99,11 +99,6 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="login.html">
-                        Login
-                    </a>
-                </li>
 
                 <li>
                     <a href="profile.html"
@@ -248,7 +243,7 @@
                             class="btn secondary-btn"
                             id="logoutButton">
 
-                            Logout
+                            Log Out
 
                         </button>
 
@@ -272,7 +267,160 @@
 
     <script src="js/app.js"></script>
 
+<!-- =====================================================
+     LOGOUT LOADING OVERLAY
+====================================================== -->
+<div id="logoutOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #2b1e1a; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; color: #ffffff;">
+    <div style="width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+        <img src="assets/images/Group 6.png" alt="UniFit Logo" style="width: 100%; height: auto; border-radius: 50%; animation: logoPulse 1.5s ease-in-out infinite alternate;">
+    </div>
+    <div id="logoutPercentage" style="font-size: 32px; font-weight: 700; color: #e6ccb2; letter-spacing: 1px; margin-bottom: 8px;">1%</div>
+    <p style="font-size: 15px; color: #d4a373; letter-spacing: 0.5px;">Logging out, please wait...</p>
+</div>
 
+<style>
+@keyframes logoPulse {
+    0% { transform: scale(0.92); filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2)); }
+    100% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(212, 163, 115, 0.6)); }
+}
+body { transition: opacity 0.6s ease-in-out; opacity: 1; }
+body.fade-out { opacity: 0; }
+</style>
+
+<!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script src="js/app.js"></script>
+
+    <!-- =====================================================
+         LOGOUT LOADING OVERLAY
+    ====================================================== -->
+    <div id="logoutOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #2b1e1a; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; color: #ffffff;">
+        <div style="width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <img src="assets/images/Group 6.png" alt="UniFit Logo" style="width: 100%; height: auto; border-radius: 50%; animation: logoPulse 1.5s ease-in-out infinite alternate;">
+        </div>
+        <div id="logoutPercentage" style="font-size: 32px; font-weight: 700; color: #e6ccb2; letter-spacing: 1px; margin-bottom: 8px;">1%</div>
+        <p style="font-size: 15px; color: #d4a373; letter-spacing: 0.5px;">Logging out, please wait...</p>
+    </div>
+
+    <style>
+    @keyframes logoPulse {
+        0% { transform: scale(0.92); filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2)); }
+        100% { transform: scale(1.08); filter: drop-shadow(0 0 20px rgba(212, 163, 115, 0.6)); }
+    }
+    body { transition: opacity 0.6s ease-in-out; opacity: 1; }
+    body.fade-out { opacity: 0; }
+    </style>
+
+    <!-- =====================================================
+         PINAG-ISANG AT MALINIS NA SCRIPT PARA SA PROFILE & LOGOUT
+    ====================================================== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isLoggedIn = localStorage.getItem('unifit_isLoggedIn');
+        
+        // --- 1. NAVBAR LOGIN & PROFILE TOGGLE ---
+        const loginLinks = document.querySelectorAll('a[href="login.html"]');
+        const profileLinks = document.querySelectorAll('a[href="profile.html"]');
+
+        loginLinks.forEach(function(link) {
+            const listItem = link.closest('li');
+            if (isLoggedIn === 'true') {
+                if (listItem) listItem.style.setProperty('display', 'none', 'important');
+                else link.style.setProperty('display', 'none', 'important');
+            } else {
+                if (listItem) listItem.style.removeProperty('display');
+                else link.style.removeProperty('display');
+            }
+        });
+
+        profileLinks.forEach(function(link) {
+            const listItem = link.closest('li');
+            if (isLoggedIn === 'true') {
+                if (listItem) listItem.style.removeProperty('display');
+                else link.style.removeProperty('display');
+            } else {
+                if (listItem) listItem.style.setProperty('display', 'none', 'important');
+                else link.style.setProperty('display', 'none', 'important');
+            }
+        });
+
+        // --- 2. LOAD PROFILE DATA (KUNG NAKA-LOGIN) ---
+        const savedName = localStorage.getItem('unifit_registered_name');
+        const savedContact = localStorage.getItem('unifit_registered_contact');
+        const savedEmail = localStorage.getItem('unifit_registered_email');
+
+        const nameElement = document.getElementById('profileName');
+        const contactElement = document.getElementById('profileContact');
+        const emailElement = document.getElementById('profileEmail');
+        const headerNameElement = document.getElementById('profileFullName');
+        const avatarElement = document.getElementById('profileAvatar');
+
+        if (savedName) {
+            if (nameElement) nameElement.textContent = savedName;
+            if (headerNameElement) headerNameElement.textContent = savedName;
+            if (avatarElement) avatarElement.textContent = savedName.charAt(0).toUpperCase();
+        }
+        if (contactElement && savedContact) {
+            contactElement.textContent = savedContact;
+        }
+        if (emailElement && savedEmail) {
+            emailElement.textContent = savedEmail;
+        }
+
+        // --- 3. LOGOUT HANDLING WITH LOADING OVERLAY ---
+        const logoutBtn = document.getElementById('logoutButton') || document.getElementById('logoutBtn');
+        const logoutOverlay = document.getElementById('logoutOverlay');
+        const logoutPercentage = document.getElementById('logoutPercentage');
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (logoutOverlay && logoutPercentage) {
+                    logoutOverlay.style.display = 'flex';
+                    let currentProgress = 1;
+                    logoutPercentage.textContent = '1%';
+
+                    let logoutInterval = setInterval(function() {
+                        if (currentProgress >= 100) {
+                            clearInterval(logoutInterval);
+
+                            // BURAHIN ANG LAHAT NG LOGIN STATE AT PERSONAL INFO
+                            localStorage.removeItem('unifit_isLoggedIn');
+                            localStorage.removeItem('unifit_registered_name');
+                            localStorage.removeItem('unifit_registered_contact');
+                            localStorage.removeItem('unifit_registered_email');
+                            localStorage.removeItem('unifit_registered_password');
+
+                            document.body.classList.add('fade-out');
+                            setTimeout(function() {
+                                window.location.href = 'login.html';
+                            }, 600);
+
+                        } else {
+                            currentProgress++;
+                            logoutPercentage.textContent = currentProgress + '%';
+                        }
+                    }, 30);
+                } else {
+                    // Kung walang overlay, burahin agad
+                    localStorage.removeItem('unifit_isLoggedIn');
+                    localStorage.removeItem('unifit_registered_name');
+                    localStorage.removeItem('unifit_registered_contact');
+                    localStorage.removeItem('unifit_registered_email');
+                    localStorage.removeItem('unifit_registered_password');
+                    
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+    });
+    </script>
+</body>
+
+</html>
 </body>
 
 </html>

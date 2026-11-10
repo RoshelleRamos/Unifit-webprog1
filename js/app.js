@@ -1506,6 +1506,8 @@ passwordToggleButtons.forEach(
 
     }
 );
+
+
 /* =========================================================
    UNIFIT REGISTER AND LOGIN
    Front-End Demo using Local Storage
@@ -4305,3 +4307,115 @@ if (!gcashPaidConfirmation.checked) {
     );
 
 })();
+
+const passwordToggleBtn = document.querySelector('.password-toggle');
+const passwordInput = document.getElementById('loginPassword');
+
+if (passwordToggleBtn && passwordInput) {
+    passwordToggleBtn.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordToggleBtn.classList.add('showing');
+        } else {
+            passwordInput.type = 'password';
+            passwordToggleBtn.classList.remove('showing');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const isLoggedIn = localStorage.getItem('unifit_isLoggedIn');
+
+    // Hanapin ang Login at Profile links sa navbar
+    const loginLink = document.querySelector('a[href="login.html"]');
+    const profileLink = document.querySelector('a[href="profile.html"]');
+
+    // --- 1. NAVBAR DYNAMIC DISPLAY ---
+    if (isLoggedIn === 'true') {
+        if (loginLink) {
+            const loginItem = loginLink.closest('li') || loginLink;
+            loginItem.style.setProperty('display', 'none', 'important');
+        }
+        if (profileLink) {
+            const profileItem = profileLink.closest('li') || profileLink;
+            profileItem.style.removeProperty('display');
+        }
+    } else {
+        if (loginLink) {
+            const loginItem = loginLink.closest('li') || loginLink;
+            loginItem.style.removeProperty('display');
+        }
+        if (profileLink) {
+            const profileItem = profileLink.closest('li') || profileLink;
+            profileItem.style.setProperty('display', 'none', 'important');
+        }
+    }
+
+    // --- 2. LOGOUT LOGIC WITH OVERLAY (Para sa profile.html) ---
+    const logoutBtn = document.getElementById('logoutButton') || document.getElementById('logoutBtn');
+    const logoutOverlay = document.getElementById('logoutOverlay');
+    const logoutPercentage = document.getElementById('logoutPercentage');
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            if (logoutOverlay) {
+                logoutOverlay.style.display = 'flex';
+                let currentProgress = 1;
+                if (logoutPercentage) logoutPercentage.textContent = '1%';
+
+                let logoutInterval = setInterval(function() {
+                    if (currentProgress >= 100) {
+                        clearInterval(logoutInterval);
+                        localStorage.removeItem('unifit_isLoggedIn');
+                        document.body.classList.add('fade-out');
+                        setTimeout(function() {
+                            window.location.href = 'index.html';
+                        }, 600);
+                    } else {
+                        currentProgress++;
+                        if (logoutPercentage) logoutPercentage.textContent = currentProgress + '%';
+                    }
+                }, 40);
+            } else {
+                localStorage.removeItem('unifit_isLoggedIn');
+                window.location.href = 'index.html';
+            }
+        });
+    }
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const passwordToggleButtons = document.querySelectorAll(".password-toggle");
+
+    passwordToggleButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            // Kunin ang target gamit ang data-target, o hanapin sa malapit na container
+            const targetId = button.getAttribute("data-target");
+            let passwordInput = targetId ? document.getElementById(targetId) : null;
+            
+            if (!passwordInput) {
+                const container = button.closest(".form-group") || button.closest(".password-field") || button.parentElement;
+                passwordInput = container ? container.querySelector("input[type='password'], input[type='text']") : null;
+            }
+
+            if (!passwordInput) return;
+
+            const eyeClosed = button.querySelector(".eye-closed");
+            const eyeOpen = button.querySelector(".eye-open");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                if (eyeClosed) eyeClosed.style.setProperty("display", "none", "important");
+                if (eyeOpen) eyeOpen.style.setProperty("display", "block", "important");
+            } else {
+                passwordInput.type = "password";
+                if (eyeClosed) eyeClosed.style.setProperty("display", "block", "important");
+                if (eyeOpen) eyeOpen.style.setProperty("display", "none", "important");
+            }
+        });
+    });
+});
