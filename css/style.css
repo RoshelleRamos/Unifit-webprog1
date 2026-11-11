@@ -3795,7 +3795,7 @@ img {
 .register-terms {
     display: flex;
 
-    align-items: flex-start;
+    align-items: center;
 
     gap: 8px;
 
@@ -3803,6 +3803,8 @@ img {
 
     font-size: 12px;
 
+    cursor: pointer;
+    display: inline-flex;
     cursor: pointer;
 }
 
@@ -7236,3 +7238,18 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     display: block !important;
 }
 
+/* I-default na ipakita ang closed eye at itago ang open eye kapag password pa ang type */
+.password-field input[type="password"] ~ .password-toggle .eye-open {
+    display: none;
+}
+.password-field input[type="password"] ~ .password-toggle .eye-closed {
+    display: block;
+}
+
+/* Kapag naging text na ang type, ipakita ang open eye at itago ang closed eye */
+.password-field input[type="text"] ~ .password-toggle .eye-open {
+    display: block;
+}
+.password-field input[type="text"] ~ .password-toggle .eye-closed {
+    display: none;
+}

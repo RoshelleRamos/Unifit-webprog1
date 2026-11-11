@@ -1740,6 +1740,72 @@ passwordToggleButtons.forEach(
                     return;
                 }
 
+                document.addEventListener("DOMContentLoaded", function () {
+    const unifitLoginForm = document.getElementById("loginForm");
+
+    if (unifitLoginForm) {
+        unifitLoginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const emailInput = document.getElementById("loginEmail");
+            const passwordInput = document.getElementById("loginPassword");
+
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+            const password = passwordInput ? passwordInput.value : "";
+
+            // 1. Check kung walang laman
+            if (email === "" || password === "") {
+                alert("Please enter your email and password.");
+                return;
+            }
+
+            let foundUser = null;
+
+            // 2. Suriin kung nakasave bilang array ("unifitUsers") o single object ("unifitUser")
+            const savedUsers = localStorage.getItem("unifitUsers");
+            const singleUser = localStorage.getItem("unifitUser");
+
+            if (savedUsers) {
+                const usersArray = JSON.parse(savedUsers);
+                foundUser = usersArray.find(u => u.email && u.email.toLowerCase() === email);
+            }
+
+            // Kung hindi nahanap sa array, subukan namang hanapin sa single account
+            if (!foundUser && singleUser) {
+                const userObj = JSON.parse(singleUser);
+                if (userObj.email && userObj.email.toLowerCase() === email) {
+                    foundUser = userObj;
+                }
+            }
+
+            // 3. Kung wala pa rin kahit saan, ibig sabihin ay hindi pa rehistrado
+            if (!foundUser) {
+                alert("No account found. Please register first.");
+                return;
+            }
+
+            // 4. I-check kung tama ang password
+            if (foundUser.password !== password) {
+                alert("Wrong Password");
+                return;
+            }
+
+            // 5. KUNG TAMA ANG LAHAT: I-save ang session at mag-redirect sa homepage
+            localStorage.setItem('unifit_isLoggedIn', 'true');
+            localStorage.setItem('unifit_registered_email', foundUser.email);
+            localStorage.setItem('unifit_registered_name', (foundUser.firstName || '') + " " + (foundUser.lastName || ''));
+            localStorage.setItem('unifit_registered_contact', foundUser.contactNumber || '');
+            localStorage.setItem('currentUser', JSON.stringify(foundUser));
+
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 600);
+        });
+    }
+});
+
 
                 /* GET REGISTERED ACCOUNT */
 
@@ -4419,3 +4485,101 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const unifitLoginForm = document.getElementById("loginForm");
+
+    if (unifitLoginForm) {
+        unifitLoginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            const emailInput = document.getElementById("loginEmail");
+            const passwordInput = document.getElementById("loginPassword");
+
+            const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+            const password = passwordInput ? passwordInput.value : "";
+
+            // 1. Check kung walang laman
+            if (email === "" || password === "") {
+                alert("Please enter your email and password.");
+                return;
+            }
+
+            // 2. Kunin ang listahan ng lahat ng rehistradong accounts mula sa localStorage
+            const savedUsers = localStorage.getItem("unifitUsers");
+
+            if (!savedUsers) {
+                alert("No account found. Please register first.");
+                return;
+            }
+
+            const usersArray = JSON.parse(savedUsers);
+
+            // 3. Hanapin kung nag-e-exist ang email sa listahan
+            const foundUser = usersArray.find(user => user.email.toLowerCase() === email);
+
+            if (!foundUser) {
+                // Kapag walang kaparehong email sa database/localStorage
+                alert("No account found. Please register first.");
+                return;
+            }
+
+            // 4. I-check kung tama ang password para sa email na 'yon
+            if (foundUser.password !== password) {
+                // Kapag rehistrado ang email pero mali ang password
+                alert("Wrong Password");
+                return;
+            }
+
+            // 5. KUNG TAMA ANG LAHAT: I-save ang active session at mag-redirect
+            localStorage.setItem('unifit_isLoggedIn', 'true');
+            localStorage.setItem('unifit_registered_email', foundUser.email);
+            localStorage.setItem('unifit_registered_name', (foundUser.firstName || '') + " " + (foundUser.lastName || ''));
+            localStorage.setItem('unifit_registered_contact', foundUser.contactNumber || '');
+            localStorage.setItem('currentUser', JSON.stringify(foundUser));
+
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 600);
+        });
+    }
+});
+
+const registerForm = document.getElementById("registerForm"); // O kung ano man ang ID ng form mo sa register.html
+
+if (registerForm) {
+    registerForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // 1. Kunin ang mga nilagay ng user sa inputs
+        const firstName = document.getElementById("regFirstName").value.trim();
+        const lastName = document.getElementById("regLastName").value.trim();
+        const email = document.getElementById("regEmail").value.trim().toLowerCase();
+        const password = document.getElementById("regPassword").value;
+        const contactNumber = document.getElementById("regContact").value.trim();
+
+        // (Opsyonal dito ang validation kung may blangko o kung tugma ang passwords)
+
+        // 2. DITO MO ILALAGAY ANG CODE NA IBINIGAY MO:
+        let users = JSON.parse(localStorage.getItem("unifitUsers")) || [];
+
+        const newUser = {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            contactNumber: contactNumber
+        };
+
+        users.push(newUser);
+
+        // I-save ulit sa localStorage
+        localStorage.setItem("unifitUsers", JSON.stringify(users));
+
+        // 3. Mag-alert o mag-redirect papunta sa login page pagkatapos mag-register
+        alert("Registration successful! You can now log in.");
+        window.location.href = "login.html";
+    });
+}
