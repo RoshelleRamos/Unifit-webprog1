@@ -283,11 +283,11 @@
             required>
 
         <button
-    type="button"
-    class="password-toggle register-toggle"
-    data-target="registerPassword"
-    aria-label="Show password">
-    
+            type="button"
+            class="password-toggle"
+            data-target="registerPassword"
+            aria-label="Show password">
+
             <!-- CLOSED EYE -->
             <svg
                 class="eye-closed"
@@ -351,12 +351,10 @@
             required>
 
         <button
-    type="button"
-    class="password-toggle register-toggle"
-    data-target="confirmPassword"
-    aria-label="Show password">
-    
-
+            type="button"
+            class="password-toggle"
+            data-target="confirmPassword"
+            aria-label="Show password">
 
             <!-- CLOSED EYE -->
             <svg
@@ -399,13 +397,6 @@
         </button>
 
     </div>
-
-    <!-- Loading Overlay para sa Register -->
-<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 9999;">
-    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
-        <p>Creating account... <span id="loadingPercentage">1%</span></p>
-    </div>
-</div>
 
 </div>
                     <!-- TERMS -->
@@ -499,93 +490,8 @@
 
 
     <script src="js/app.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/auth.js?v=2"></script>
 
-   <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const registerForm = document.getElementById('registerForm');
-    const overlay = document.getElementById('loadingOverlay');
-    const percentageText = document.getElementById('loadingPercentage');
-
-    if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // 1. Kunin ang mga in-input ng user
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const contactNumber = document.getElementById('contactNumber').value.trim();
-            const emailInput = document.getElementById('registerEmail').value.trim();
-            const passwordInput = document.getElementById('registerPassword').value.trim();
-            
-            const fullName = firstName + ' ' + lastName;
-
-            // 2. I-save sa localStorage ang mga information para sa profile
-            localStorage.setItem('unifit_registered_name', fullName);
-            localStorage.setItem('unifit_registered_contact', contactNumber);
-            localStorage.setItem('unifit_registered_email', emailInput);
-            localStorage.setItem('unifit_registered_password', passwordInput);
-
-            // 3. I-set na agad na naka-login na siya para mawala ang Login sa navbar pagdating sa homepage
-            localStorage.setItem('unifit_isLoggedIn', 'true');
-
-            // 4. Patakbuhin ang loading overlay hanggang 100%
-            if (overlay && percentageText) {
-                overlay.style.display = 'flex';
-                let currentProgress = 1;
-                percentageText.textContent = '1%';
-                
-                let loadingInterval = setInterval(function() {
-                    if (currentProgress >= 100) {
-                        clearInterval(loadingInterval);
-                        
-                        // Fade out effect pagkatapos mag-100%
-                        document.body.classList.add('fade-out');
-                        
-                        // Direktang pumunta sa HOMEPAGE (index.html) pagkalipas ng 0.6 seconds
-                        setTimeout(function() {
-                            window.location.href = 'index.html';
-                        }, 600);
-                        
-                    } else {
-                        currentProgress++;
-                        percentageText.textContent = currentProgress + '%';
-                    }
-                }, 40);
-            } else {
-                // Kung walang overlay, direktang lipat sa index.html
-                window.location.href = 'index.html';
-            }
-        });
-    }
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const passwordToggleButtons = document.querySelectorAll(".password-toggle");
-
-    passwordToggleButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-            // Kunin ang ID ng input mula sa data-target attribute
-            const targetId = button.getAttribute("data-target");
-            const passwordInput = document.getElementById(targetId);
-
-            if (!passwordInput) {
-                return;
-            }
-
-            // I-toggle ang type ng input at ang class ng button para magpalit ang icon ng mata
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                button.classList.add("showing-password");
-            } else {
-                passwordInput.type = "password";
-                button.classList.remove("showing-password");
-            }
-        });
-    });
-});
-</script>
 </body>
 
 </html>
