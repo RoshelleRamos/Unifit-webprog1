@@ -1677,6 +1677,28 @@
 
     </script>
 
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Alamin kung naka-login na ang user
+    const isLoggedIn = localStorage.getItem('unifit_isLoggedIn');
+    
+    if (isLoggedIn === 'true') {
+        // Hanapin ang lahat ng link na papuntang login.html
+        const loginLinks = document.querySelectorAll('a[href="login.html"]');
+        
+        loginLinks.forEach(function(link) {
+            // Itago ang buong <li> element kung doon siya nakapulupot, o kaya ay ang mismong link
+            const listItem = link.closest('li');
+            if (listItem) {
+                listItem.style.setProperty('display', 'none', 'important');
+            } else {
+                link.style.setProperty('display', 'none', 'important');
+            }
+        });
+    }
+});
+</script>
+
 
 </body>
 

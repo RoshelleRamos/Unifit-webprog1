@@ -41,10 +41,46 @@
         if (password !== confirmation) return showMessage("Passwords do not match.", true);
         const students = readStudents();
         if (students.some(function (student) { return student.email.toLowerCase() === email; })) return showMessage("This email is already registered.", true);
-        students.push({ id: "student-" + Date.now(), firstName: firstName, lastName: lastName, contactNumber: contactNumber, email: email, password: password, role: "student", createdAt: new Date().toISOString() });
+        const newStudent = {
+    id: "student-" + Date.now(),
+    firstName: firstName,
+    lastName: lastName,
+    contactNumber: contactNumber,
+    email: email,
+    password: password,
+    role: "student",
+    active: true,
+    createdAt: new Date().toISOString()
+};
+
+students.push(newStudent);
+
+
         localStorage.setItem(STUDENTS_KEY, JSON.stringify(students));
-        showMessage("Student account created. Redirecting to login...", false);
-        setTimeout(function () { window.location.href = "login.html"; }, 700);
+
+        /* AUTO LOGIN AFTER REGISTRATION */
+
+localStorage.setItem(
+    "unifitLoggedIn",
+    "true"
+);
+
+localStorage.setItem(
+    "unifitCurrentUser",
+    JSON.stringify({
+        id: newStudent.id,
+        firstName: newStudent.firstName,
+        lastName: newStudent.lastName,
+        contactNumber: newStudent.contactNumber,
+        email: newStudent.email,
+        role: "student"
+    })
+);
+
+            setTimeout(function () {
+                window.location.href = "welcome.html";
+            }, 600);
+
     });
 
     const loginForm = document.getElementById("loginForm");
@@ -56,7 +92,6 @@
         if (!student) return showMessage("Incorrect student email or password.", true);
         localStorage.setItem("unifitLoggedIn", "true");
         localStorage.setItem("unifitCurrentUser", JSON.stringify({ id: student.id, firstName: student.firstName, lastName: student.lastName, contactNumber: student.contactNumber, email: student.email, role: "student" }));
-        showMessage("Welcome back, " + student.firstName + "!", false);
-        setTimeout(function () { window.location.href = "profile.html"; }, 500);
+        setTimeout(function () { window.location.href = "welcome.html";}, 500);
     });
 })();
